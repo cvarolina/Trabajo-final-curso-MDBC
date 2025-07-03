@@ -49,7 +49,8 @@ Los resultados se muestran en la siguiente tabla:
 6  Mtruncatula     control        52  19.152    18.00  13.0  13.650  18.00  23.550    37.261              6.104
 7  Mtruncatula          wt        48  75.708    74.50  68.9  67.900  74.50  84.575   414.580             20.361
 '''
-```
+´´´
+
 Como puede observarse en la tabla, la media más baja para cada especie de planta utilizada corresponde al tratamiento control. Este control es el tratamiento sin inocular, es decir, sin bacterias capaces de fijar el nitrógeno atmosférico. Por lo tanto, es lógico que tengan menor peso seco por planta, dado que en ausencia de nitrógeno las plantas presentan menor crecimiento.
 
 Por otro lado, las medidas de dispersión nos indican la representatividad de las medidas de dispersión y cuánto se desvían los datos de su valor central.
@@ -58,7 +59,7 @@ Para eso, calculé dentro de cada especie de planta cuáles eran los tratamiento
 ```python
 mayores = medidas.loc[medidas.groupby('Especie')['varianza'].idxmax()].reset_index(drop=True)
 print(mayores)
-```
+´´´
 El resultado se muestra en la siguiente tabla:
 ```python
 '''
@@ -66,7 +67,7 @@ El resultado se muestra en la siguiente tabla:
 0      Msativa          wt        48  52.935417     51.0  47.3  40.475  51.0  64.075  303.022336          17.407537
 1  Mtruncatula          wt        48  75.708333     74.5  68.9  67.900  74.5  84.575  414.580355          20.361246
 '''
-´´´´
+´´´
 Se observa que el tratamiento con la cepa wt es el que mayor desviación típica y varianza presenta tanto en M. sativa como en M. truncatula.
 
 ### Coeficientes de asimetría y curtosis
