@@ -300,7 +300,7 @@ Al realizar el test de Welch entre pares de tratamientos, se observa que los tra
 
 ### 9 - Comparación entre variables categóricas
 
-Prueba de chi-cuadrado (χ²): Es una prueba estadística que se utiliza para evaluar la asociación entre dos variables categóricas. La prueba de chi-cuadrado compara la frecuencia observada en cada celda de la tabla de contingencia con la frecuencia esperada si no hubiera ninguna relación entre las variables. Si la diferencia entre la frecuencia observada y la esperada es grande, se concluye que hay una relación significativa entre las variables.
+Prueba de chi-cuadrado: Es una prueba estadística que se utiliza para evaluar la asociación entre dos variables categóricas. La prueba de chi-cuadrado compara la frecuencia observada en cada celda de la tabla de contingencia con la frecuencia esperada si no hubiera ninguna relación entre las variables. Si la diferencia entre la frecuencia observada y la esperada es grande, se concluye que hay una relación significativa entre las variables.
 
 El test de Chi2 evalúa si hay dependencia entre las dos variables categóricas:
 H0: Especie y Tratamiento son variables independientes.
