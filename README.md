@@ -72,20 +72,59 @@ El resultado se muestra en la siguiente tabla:
 
 Se observa que el tratamiento con la cepa wt es el que mayor desviación típica y varianza presenta tanto en M. sativa como en M. truncatula.
 
-### Coeficientes de asimetría y curtosis
+### 5 - Coeficientes de asimetría y curtosis
 
 Las medidas de dispersión calculadas previamente quedan expresadas en las unidades de la variable. Para solucionar este problema se definen medidas de dispersión relativas.
 Por esta razón calculé el coeficiente de variación de Pearson, el coeficiente de asimetría de Fisher y el coeficiente de curtosis.
 
 ```python
+Código:
+medidas_especie = df.groupby('Especie')['peso-seco-mg'].agg(
+    coef_variacion=lambda x: np.std(x, ddof=1) / np.mean(x),
+    asimetria=lambda x: stats.skew(x, bias=False),
+    curtosis=lambda x: stats.kurtosis(x, bias=False)
+).reset_index()
+print(medidas_especie.round(3))
+
 '''
        Especie  coef_variacion  asimetria  curtosis
 0      Msativa           0.560     -0.192    -0.986
 1  Mtruncatula           0.514      0.412     0.096
 '''
 ```
-
-
 El grupo de datos de peso seco provenientes de M. sativa presenta asimetría negativa, esto significa que presenta una cola de datos ligeramente hacia la izquierda. Además, presenta curtosis ligeramente negativa, siendo en este caso una distribución platicúrtica.
 A diferencia, los datos de peso seco de M. truncatula presentan asimetría positiva, esto significa que la cola de datos se encuentra ligeramente hacia la derecha. El coeficiente de curtosis presenta un valor cercano a cero, por lo que se trata de una distribución mesocúrtica.
 
+### 6 - Estimación de intervalos de confianza
+
+Se calcularon los intervalos sobre los cuales que podamos establecer (con cierta probabilidad) que el parámetro poblacional se encuentra contenido mediante intervalos de confianza. Para ello, teniendo en cuenta que todos los tratamientos contenian más de 30 datos, se asumió distribución normal.
+
+```python
+Código:
+# Intervalos de confianza por especie y tratamiento
+# IC = media +- Z * (desviación tipica / raiz de n)
+# IC = media +- Z * (error estandar)
+# Z para 95% de confianza
+Z = 1.96
+# Error estándar y límites IC
+medidas['error_estandar'] = medidas['desviacion_tipica'] / np.sqrt(medidas['cantidad'])
+medidas['IC_inf'] = medidas['media'] - Z * medidas['error_estandar']
+medidas['IC_sup'] = medidas['media'] + Z * medidas['error_estandar']
+print("\nIntervalos de confianza por especie y tratamiento:")
+print(medidas[['Especie', 'Tratamiento', 'cantidad', 'media', 'IC_inf', 'IC_sup']].round(3))
+
+Resultado:
+'''
+Intervalos de confianza por especie y tratamiento:
+       Especie Tratamiento  cantidad   media  IC_inf  IC_sup
+0      Msativa      actK1-        47  56.891  52.514  61.269
+1      Msativa      actK2-        49  52.876  48.884  56.868
+2      Msativa     control        46   8.046   7.535   8.556
+3      Msativa          wt        48  52.935  48.011  57.860
+4  Mtruncatula      actK1-        53  61.826  56.860  66.793
+5  Mtruncatula      actK2-        46  48.943  44.954  52.933
+6  Mtruncatula     control        52  19.152  17.493  20.811
+7  Mtruncatula          wt        48  75.708  69.948  81.469
+'''
+```
+```
