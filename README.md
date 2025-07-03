@@ -25,6 +25,7 @@ Variables categóricas:
 
 Variable aleatoria continua:
 - Peso seco de fracción area de cada planta, para cada condición de tratamiento y especie de planta utilizada, medido como mg/planta.
+Aclaración: el peso seco de la fracción área de una planta permite estimar la fijación biológica de nitrógeno (FBN). Cuanto mayor es el peso seco, mayor será la FBN.
 
 ### 4 - Descripción de los datos
 
@@ -50,5 +51,15 @@ Los resultados se muestran en la siguiente tabla:
 '''
 ```
 Como puede observarse en la tabla, la media más baja para cada especie de planta utilizada corresponde al tratamiento control. Este control es el tratamiento sin inocular, es decir, sin bacterias capaces de fijar el nitrógeno atmosférico. Por lo tanto, es lógico que tengan menor peso seco por planta, dado que en ausencia de nitrógeno las plantas presentan menor crecimiento.
+
+Por otro lado, las medidas de dispersión nos indican la representatividad de las medidas de dispersión y cuánto se desvían los datos de su valor central.
+Para eso, calculé dentro de cada especie de planta cuáles eran los tratamientos que presentaban mayor desviación típica y varianza de la siguiente forma:
+
+```python
+'''
+mayores = medidas.loc[medidas.groupby('Especie')['varianza'].idxmax()].reset_index(drop=True)
+print(mayores)
+'''
+```
 
 
