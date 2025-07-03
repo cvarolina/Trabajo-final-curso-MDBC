@@ -182,21 +182,25 @@ Los resultados obtenidos fueron: n = 5 para M. sativa y n = 4 para M. truncatula
 
 wt vs actK2 --> En este caso se observa que dado que las medias son prácticamente iguales en M. sativa, el tamaño de la muestra debería ser infinitamente grande para detectar diferencias entre wt y actK2.
 ```python
+'''
              media_actK2-  media_wt  desviacion_tipica  tamaño_efecto
 Especie
 Msativa            52.876    52.935             24.093         -0.002
 Mtruncatula        48.943    75.708             26.219         -1.021
 Tamaño de muestra por grupo para Msativa wt vs actK2-: 2539107.0
 Tamaño de muestra por grupo para Mtruncatula wt vs actK2-: 16.0
+'''
 ```
 wt vs actK1 --> En este otro caso, para este mutante las medias son diferentes y el tamaño de la muestra debería ser cercano a 583 para detectar diferencias entre wt y actK1 en M. sativa, mientras que con 56 plantas bastaría para determinar diferencias entre wt y actK1 en M. truncatula. Esto se debe a que al ser mayor la diferencia detectada entre las medias de estas dos cepas en esta especie de plantas, menor cantidad de plantas se necesita para demostrarla.
 ```python
+'''
              media_actK1-  media_wt  desviacion_tipica  tamaño_efecto
 Especie
 Msativa            56.891    52.935             24.093          0.164
 Mtruncatula        61.826    75.708             26.219         -0.529
 Tamaño de muestra por grupo para Msativa wt vs actK1-: 583.0
 Tamaño de muestra por grupo para Mtruncatula wt vs actK1-: 56.0
+'''
 ```
 
 ### 8 - Contraste de hipótesis
@@ -233,16 +237,16 @@ for especie in df['Especie'].unique():
     else:
         print("Se cumple la igualdad de varianzas (homocedasticidad).")
 
-Resultado:
-Especie: Mtruncatula
-Estadístico de Levene: 9.414
-p-valor: 0.0000
-No se cumple la igualdad de varianzas (varianzas desiguales).
+# Resultado:
+# Especie: Mtruncatula
+# Estadístico de Levene: 9.414
+# p-valor: 0.0000
+# No se cumple la igualdad de varianzas (varianzas desiguales).
 
-Especie: Msativa
-Estadístico de Levene: 19.779
-p-valor: 0.0000
-No se cumple la igualdad de varianzas (varianzas desiguales).
+# Especie: Msativa
+# Estadístico de Levene: 19.779
+# p-valor: 0.0000
+# No se cumple la igualdad de varianzas (varianzas desiguales).
 ```
 
 **Prueba Welch**
