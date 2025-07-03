@@ -277,22 +277,22 @@ for especie in especies:
         else:
             print(f"→ No hay diferencia significativa ({t1} vs {t2})")
 
-Resultados:
-=== Welch t-tests para Msativa ===
-wt vs actK1-: t = -1.177, p = 0.2423
-→ No hay diferencia significativa (wt vs actK1-)
-wt vs actK2-: t = 0.019, p = 0.9853
-→ No hay diferencia significativa (wt vs actK2-)
-actK1- vs actK2-: t = 1.329, p = 0.1872
-→ No hay diferencia significativa (actK1- vs actK2-)
+# Resultados:
+# === Welch t-tests para Msativa ===
+# wt vs actK1-: t = -1.177, p = 0.2423
+# → No hay diferencia significativa (wt vs actK1-)
+# wt vs actK2-: t = 0.019, p = 0.9853
+# → No hay diferencia significativa (wt vs actK2-)
+# actK1- vs actK2-: t = 1.329, p = 0.1872
+# → No hay diferencia significativa (actK1- vs actK2-)
 
-=== Welch t-tests para Mtruncatula ===
-wt vs actK1-: t = 3.577, p = 0.0005
-→ Diferencia significativa (wt vs actK1-)
-wt vs actK2-: t = 7.487, p = 0.0000
-→ Diferencia significativa (wt vs actK2-)
-actK1- vs actK2-: t = 3.964, p = 0.0001
-→ Diferencia significativa (actK1- vs actK2-)
+# === Welch t-tests para Mtruncatula ===
+# wt vs actK1-: t = 3.577, p = 0.0005
+# → Diferencia significativa (wt vs actK1-)
+# wt vs actK2-: t = 7.487, p = 0.0000
+# → Diferencia significativa (wt vs actK2-)
+# actK1- vs actK2-: t = 3.964, p = 0.0001
+# → Diferencia significativa (actK1- vs actK2-)
 
 ```
 
@@ -341,7 +341,7 @@ Mtruncatula      53      46       52  48
 # No hay evidencia de dependencia entre Especie y Tratamiento --> no se rechaza H0
 ```
 
-Esto significa que no hay evidencia estadística de que la frecuencia de tratamientos dependa de la especie. En otras palabras, la distribución de cepas es similar entre Msativa y Mtruncatula (en términos de cantidad de muestras por tratamiento).
+Esto significa que no hay evidencia estadística de que la frecuencia de tratamientos dependa de la especie. En otras palabras, la distribución de cepas es similar entre M. sativa y M. truncatula (en términos de cantidad de muestras por tratamiento).
 
 
 
