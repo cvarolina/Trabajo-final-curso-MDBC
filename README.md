@@ -30,16 +30,25 @@ Variable aleatoria continua:
 
 Para observar cómo se distribuyen los datos de peso seco obtenidos para la inoculación de distintas especies de plantas con distintas cepas/tratamientos, se realizó el siguiente histograma (Figura 1). Como puede observarse en la figura, la distribución de los datos obtenidos no parece corresponderse con una distribución normal, tanto para los datos de peso seco obtenidos de Medicago truncatula como de Medicago sativa. Sin embargo, eso puede confirmarse con un test de normalidad y analizando la homocedasticidad.
 
-![Figure_1-histograma-curva-por-especie](https://github.com/user-attachments/assets/024afd83-1240-4a18-922c-31f0c87a4a6a)
+![Figure_1-histograma-curva-por-especie](https://github.com/user-attachments/assets/024afd83-1240-4a18-922c-31f0c87a4a6a) 
+### Figura 1
 
+Además, calculé medidas resumen: de centralización (media, mediana, moda y percentiles) y de dispersión (varianza y desviación) para analizar los resultados por especie y tratamiento. 
+Los resultados se muestran en la siguiente tabla:
 
-# Carga de datos a analizar
-archivo = "datos-peso-seco.csv"
-df = pd.read_csv(archivo, sep=";", decimal=",")
-cat_cols = ["Especie", "Tratamiento"]
-num_cols = [col for col in df.columns if col not in cat_cols]
-print(df.head())
-peso_seco = df['peso-seco-mg'].dropna()
-
+```python
+'''
+       Especie Tratamiento  cantidad   media  mediana  moda     p25    p50     p75  varianza  desviacion_tipica
+0      Msativa      actK1-        47  56.891    59.60  59.6  46.850  59.60  68.200   234.408             15.310
+1      Msativa      actK2-        49  52.876    54.80  54.8  45.400  54.80  61.200   203.266             14.257
+2      Msativa     control        46   8.046     7.90   8.9   6.950   7.90   8.900     3.124              1.768
+3      Msativa          wt        48  52.935    51.00  47.3  40.475  51.00  64.075   303.022             17.408
+4  Mtruncatula      actK1-        53  61.826    60.30  17.5  48.100  60.30  72.600   340.275             18.447
+5  Mtruncatula      actK2-        46  48.943    47.65  31.4  39.150  47.65  58.325   190.581             13.805
+6  Mtruncatula     control        52  19.152    18.00  13.0  13.650  18.00  23.550    37.261              6.104
+7  Mtruncatula          wt        48  75.708    74.50  68.9  67.900  74.50  84.575   414.580             20.361
+'''
+```
+Como puede observarse en la tabla, la media más baja para cada especie de planta utilizada corresponde al tratamiento control. Este control es el tratamiento sin inocular, es decir, sin bacterias capaces de fijar el nitrógeno atmosférico. Por lo tanto, es lógico que tengan menor peso seco por planta, dado que en ausencia de nitrógeno las plantas presentan menor crecimiento.
 
 
