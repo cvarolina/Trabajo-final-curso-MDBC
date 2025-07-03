@@ -24,7 +24,12 @@ Variables categóricas:
 - Tratamiento: wt, actK1, actK2, control sin inocular
 
 Variable aleatoria continua:
-- Peso seco cuantificado para cada condición de tratamiento y especie de planta utilizada, medido como mg/planta.
+- Peso seco de fracción area de cada planta, para cada condición de tratamiento y especie de planta utilizada, medido como mg/planta.
 
 ### 4 - Descripción de los datos
+
+Para observar cómo se distribuyen los datos de peso seco obtenidos para la inoculación de distintas especies de plantas con distintas cepas/tratamientos, se realizó el siguiente histograma (Figura 1). Como puede observarse en la figura, la distribución de los datos obtenidos no parece corresponderse con una distribución normal, tanto para los datos de peso seco obtenidos de Medicago truncatula como de Medicago sativa. Sin embargo, eso puede confirmarse con un test de normalidad y analizando la homocedasticidad.
+
+![Figure_1-histograma-curva-por-especie](https://github.com/user-attachments/assets/024afd83-1240-4a18-922c-31f0c87a4a6a)
+
 
