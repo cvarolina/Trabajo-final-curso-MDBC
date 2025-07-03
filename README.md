@@ -250,44 +250,99 @@ for especie in df['Especie'].unique():
 ```
 
 **Prueba Welch**
-Teniendo en cuenta que los datos cumplen el test de normalidad pero cuentan con varianzas desiguales, realizo la Prueba de Welch:
-Esta es una versión modificada de la prueba t de Student que se utiliza cuando los datos tienen varianzas desiguales o diferentes tamaños de muestra.
+Teniendo en cuenta que los datos cumplen el test de normalidad pero cuentan con varianzas desiguales, realizo la Prueba de Welch para comparar entre dos tratamientos dentro de una especie de plantas. Es una versión modificada de la prueba t de Student que se utiliza cuando los datos tienen varianzas desiguales o diferentes tamaños de muestra.
 
 ```python
 Código:
-## Welch test
-# Subset Msativa
-subset = df[df['Especie'] == 'Msativa']
-wt_ = subset[subset['Tratamiento'] == 'wt']['peso-seco-mg']
-actK1_ = subset[subset['Tratamiento'] == 'actK1-']['peso-seco-mg']
-stat, p = ttest_ind(wt_, actK1_, equal_var=False)
-print(f"Estadístico t de Welch: {stat:.3f}")
-print(f"p-valor: {p:.4f}")
-if p < 0.05:
-    print("Msativa - Diferencia significativa entre medias (Welch).")
-else:
-    print("Msativa - No hay diferencia significativa entre medias (Welch).")
+### Test de Welch
+# Pares de comparación
+comparaciones = [
+    ('wt', 'actK1-'),
+    ('wt', 'actK2-'),
+    ('actK1-', 'actK2-')
+]
+# Especies a analizar
+especies = ['Msativa', 'Mtruncatula']
+# Recorrer especies y pares
+for especie in especies:
+    subset = df[df['Especie'] == especie]
+    print(f"\n=== Welch t-tests para {especie} ===")
+    for t1, t2 in comparaciones:
+        grupo1 = subset[subset['Tratamiento'] == t1]['peso-seco-mg']
+        grupo2 = subset[subset['Tratamiento'] == t2]['peso-seco-mg']
+        stat, p = ttest_ind(grupo1, grupo2, equal_var=False)
+        print(f"{t1} vs {t2}: t = {stat:.3f}, p = {p:.4f}")
+        if p < 0.05:
+            print(f"→ Diferencia significativa ({t1} vs {t2})")
+        else:
+            print(f"→ No hay diferencia significativa ({t1} vs {t2})")
 
-# Subset Mtruncatula
-subset = df[df['Especie'] == 'Mtruncatula']
-wt_ = subset[subset['Tratamiento'] == 'wt']['peso-seco-mg']
-actK1_ = subset[subset['Tratamiento'] == 'actK1-']['peso-seco-mg']
-stat, p = ttest_ind(wt_, actK1_, equal_var=False)
-print(f"Estadístico t de Welch: {stat:.3f}")
+Resultados:
+=== Welch t-tests para Msativa ===
+wt vs actK1-: t = -1.177, p = 0.2423
+→ No hay diferencia significativa (wt vs actK1-)
+wt vs actK2-: t = 0.019, p = 0.9853
+→ No hay diferencia significativa (wt vs actK2-)
+actK1- vs actK2-: t = 1.329, p = 0.1872
+→ No hay diferencia significativa (actK1- vs actK2-)
+
+=== Welch t-tests para Mtruncatula ===
+wt vs actK1-: t = 3.577, p = 0.0005
+→ Diferencia significativa (wt vs actK1-)
+wt vs actK2-: t = 7.487, p = 0.0000
+→ Diferencia significativa (wt vs actK2-)
+actK1- vs actK2-: t = 3.964, p = 0.0001
+→ Diferencia significativa (actK1- vs actK2-)
+
+```
+
+Al realizar el test de Welch entre pares de tratamientos, se observa que los tratamientos en M. sativa no mostraron diferencias significativas entre sí. Sin embargo, en M. truncatula los tratamientos sí difieren significativamente. 
+
+### 9 - Comparación entre variables categóricas
+
+Prueba de chi-cuadrado (χ²): Es una prueba estadística que se utiliza para evaluar la asociación entre dos variables categóricas. La prueba de chi-cuadrado compara la frecuencia observada en cada celda de la tabla de contingencia con la frecuencia esperada si no hubiera ninguna relación entre las variables. Si la diferencia entre la frecuencia observada y la esperada es grande, se concluye que hay una relación significativa entre las variables.
+
+El test de Chi2 evalúa si hay dependencia entre las dos variables categóricas:
+H0: Especie y Tratamiento son variables independientes.
+H1: Existe una relación entre las variables Especie y Tratamiento.
+
+```python
+Código:
+## Dependencia de variables categoricas
+# Ejemplo: tabla de contingencia
+tabla = pd.crosstab(df['Especie'], df['Tratamiento'])
+print(tabla)
+# Prueba de Chi-cuadrado
+chi2, p, dof, expected = chi2_contingency(tabla)
+print(f"Estadístico Chi2: {chi2:.3f}")
 print(f"p-valor: {p:.4f}")
+print(f"Grados de libertad: {dof}")
+print("\nFrecuencias esperadas:")
+print(expected)
 if p < 0.05:
-    print("Mtruncatula - Diferencia significativa entre medias (Welch).")
+    print("Existe asociación significativa entre Especie y Tratamiento --> se rechaza H0")
 else:
-    print("Mtruncatula - No hay diferencia significativa entre medias (Welch).")
+    print("No hay evidencia de dependencia entre Especie y Tratamiento --> no se rechaza H0")
 
 # Resultado:
-# Estadístico t de Welch: -1.177
-# p-valor: 0.2423
-# Msativa - No hay diferencia significativa entre medias (Welch).
+'''
+Tratamiento  actK1-  actK2-  control  wt
+Especie
+Msativa          47      49       46  48
+Mtruncatula      53      46       52  48
+'''
+# Estadístico Chi2: 0.614
+# p-valor: 0.8932 --> > 0.05
+# Grados de libertad: 3
 
-# Estadístico t de Welch: 3.577
-# p-valor: 0.0005
-# Mtruncatula - Diferencia significativa entre medias (Welch).
+# Frecuencias esperadas:
+# [[48.84318766 46.40102828 47.86632391 46.88946015]
+# [51.15681234 48.59897172 50.13367609 49.11053985]]
+# No hay evidencia de dependencia entre Especie y Tratamiento --> no se rechaza H0
 ```
+
+Esto significa que no hay evidencia estadística de que la frecuencia de tratamientos dependa de la especie. En otras palabras, la distribución de cepas es similar entre Msativa y Mtruncatula (en términos de cantidad de muestras por tratamiento).
+
+
 
   
