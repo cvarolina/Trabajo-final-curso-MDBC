@@ -276,14 +276,14 @@ if p < 0.05:
 else:
     print("Mtruncatula - No hay diferencia significativa entre medias (Welch).")
 
-Resultado:
-Estadístico t de Welch: -1.177
-p-valor: 0.2423
-Msativa - No hay diferencia significativa entre medias (Welch).
+# Resultado:
+# Estadístico t de Welch: -1.177
+# p-valor: 0.2423
+# Msativa - No hay diferencia significativa entre medias (Welch).
 
-Estadístico t de Welch: 3.577
-p-valor: 0.0005
-Mtruncatula - Diferencia significativa entre medias (Welch).
+# Estadístico t de Welch: 3.577
+# p-valor: 0.0005
+# Mtruncatula - Diferencia significativa entre medias (Welch).
 ```
 
   
