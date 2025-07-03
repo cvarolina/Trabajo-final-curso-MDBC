@@ -189,7 +189,7 @@ Mtruncatula        48.943    75.708             26.219         -1.021
 Tamaño de muestra por grupo para Msativa wt vs actK2-: 2539107.0
 Tamaño de muestra por grupo para Mtruncatula wt vs actK2-: 16.0
 ```
-wt vs actK1 --> En este otro caso, para este mutante las medias son diferentes y el tamaño de la muestra debería ser cercano a 583 para detectar diferencias entre wt y actK1 en M. sativa, mientras que con 56 plantas bastaría para determinar diferencias entre wt y actK1 en M. truncatula.
+wt vs actK1 --> En este otro caso, para este mutante las medias son diferentes y el tamaño de la muestra debería ser cercano a 583 para detectar diferencias entre wt y actK1 en M. sativa, mientras que con 56 plantas bastaría para determinar diferencias entre wt y actK1 en M. truncatula. Esto se debe a que al ser mayor la diferencia detectada entre las medias de estas dos cepas en esta especie de plantas, menor cantidad de plantas se necesita para demostrarla.
 ```python
              media_actK1-  media_wt  desviacion_tipica  tamaño_efecto
 Especie
@@ -199,6 +199,91 @@ Tamaño de muestra por grupo para Msativa wt vs actK1-: 583.0
 Tamaño de muestra por grupo para Mtruncatula wt vs actK1-: 56.0
 ```
 
+### 8 - Contraste de hipótesis
+Si bien en la Figura 1 se puede observar que los datos tanto para M. sativa como para M. truncatula no parecen seguir una distribución normal, realizo un test para verificarlo.
 
+**Test de normalidad:**
+H0: los datos se distribuyen normalmente.
+H1: los datos no se distribuyen normalmente.
+```python
+print("El resultado del test de normalidad es: ", stats.normaltest(peso_seco, axis=0, nan_policy='propagate'))
+```
+El resultado del test de normalidad es:  NormaltestResult(statistic=np.float64(2.517611463908273), pvalue=np.float64(0.2839929878047395))
+De este modo, no hay evidencia para afirmar que los datos se desvían de la normalidad y no es posible rechazar H0.
+
+Test de Levene para comparar varianzas entre tratamientos dentro de cada especie de planta:
+
+**Realizo el test de Levene para comparar varianzas entre tratamientos dentro de cada especie**
+
+```python
+Código:
+for especie in df['Especie'].unique():
+    subset = df[df['Especie'] == especie]
+    grupos = [subset[subset['Tratamiento'] == t]['peso-seco-mg'].dropna()
+              for t in subset['Tratamiento'].unique()]
+    
+    stat, p = levene(*grupos)
+    
+    print(f"\nEspecie: {especie}")
+    print(f"Estadístico de Levene: {stat:.3f}")
+    print(f"p-valor: {p:.4f}")
+    
+    if p < 0.05:
+        print("No se cumple la igualdad de varianzas (varianzas desiguales).")
+    else:
+        print("Se cumple la igualdad de varianzas (homocedasticidad).")
+
+Resultado:
+Especie: Mtruncatula
+Estadístico de Levene: 9.414
+p-valor: 0.0000
+No se cumple la igualdad de varianzas (varianzas desiguales).
+
+Especie: Msativa
+Estadístico de Levene: 19.779
+p-valor: 0.0000
+No se cumple la igualdad de varianzas (varianzas desiguales).
+```
+
+**Prueba Welch**
+Teniendo en cuenta que los datos cumplen el test de normalidad pero cuentan con varianzas desiguales, realizo la Prueba de Welch:
+Esta es una versión modificada de la prueba t de Student que se utiliza cuando los datos tienen varianzas desiguales o diferentes tamaños de muestra.
+
+```python
+Código:
+## Welch test
+# Subset Msativa
+subset = df[df['Especie'] == 'Msativa']
+wt_ = subset[subset['Tratamiento'] == 'wt']['peso-seco-mg']
+actK1_ = subset[subset['Tratamiento'] == 'actK1-']['peso-seco-mg']
+stat, p = ttest_ind(wt_, actK1_, equal_var=False)
+print(f"Estadístico t de Welch: {stat:.3f}")
+print(f"p-valor: {p:.4f}")
+if p < 0.05:
+    print("Msativa - Diferencia significativa entre medias (Welch).")
+else:
+    print("Msativa - No hay diferencia significativa entre medias (Welch).")
+
+# Subset Mtruncatula
+subset = df[df['Especie'] == 'Mtruncatula']
+wt_ = subset[subset['Tratamiento'] == 'wt']['peso-seco-mg']
+actK1_ = subset[subset['Tratamiento'] == 'actK1-']['peso-seco-mg']
+stat, p = ttest_ind(wt_, actK1_, equal_var=False)
+print(f"Estadístico t de Welch: {stat:.3f}")
+print(f"p-valor: {p:.4f}")
+if p < 0.05:
+    print("Mtruncatula - Diferencia significativa entre medias (Welch).")
+else:
+    print("Mtruncatula - No hay diferencia significativa entre medias (Welch).")
+
+Resultado:
+Estadístico t de Welch: -1.177
+p-valor: 0.2423
+Msativa - No hay diferencia significativa entre medias (Welch).
+
+Estadístico t de Welch: 3.577
+p-valor: 0.0005
+Mtruncatula - Diferencia significativa entre medias (Welch).
+```
 
   
