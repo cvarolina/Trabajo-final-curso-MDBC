@@ -33,3 +33,13 @@ Para observar cómo se distribuyen los datos de peso seco obtenidos para la inoc
 ![Figure_1-histograma-curva-por-especie](https://github.com/user-attachments/assets/024afd83-1240-4a18-922c-31f0c87a4a6a)
 
 
+# Carga de datos a analizar
+archivo = "datos-peso-seco.csv"
+df = pd.read_csv(archivo, sep=";", decimal=",")
+cat_cols = ["Especie", "Tratamiento"]
+num_cols = [col for col in df.columns if col not in cat_cols]
+print(df.head())
+peso_seco = df['peso-seco-mg'].dropna()
+
+
+
