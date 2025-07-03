@@ -127,4 +127,78 @@ Intervalos de confianza por especie y tratamiento:
 7  Mtruncatula          wt        48  75.708  69.948  81.469
 '''
 ```
+
+### 7 - Estimación del tamaño muestral
+
+Aunque en este caso se conoce el n de cada tratamiento, al diseñar un experimento muchas veces es necesario tenerlo en cuenta previamente.
+Para calcular el tamaño de la muestra se necesita:
+- Nivel α (nivel alfa) (generalmente = 0.05)
+- Potencia (normalmente 0,8)
+- Tamaño del efecto (diferencia entre dos medias dividida por una desviación estándar)
+
+Para calcular el tamaño del efecto, en primer lugar lo calculé para cada especie de plantas considerando que entre wt y el tratamiento control voy a encontrar la mayor diferencia.
+```python
+# Calcular desviación típica global por especie
+medidas_especie = df.groupby('Especie')['peso-seco-mg'].agg(
+    desviacion_tipica = lambda x: np.std(x, ddof=1)
+).reset_index()
+
+# Filtrar medias de wt y control, donde debería observarse la mayor diferencia
+wt = medidas[medidas['Tratamiento'] == 'wt'].set_index('Especie')
+control = medidas[medidas['Tratamiento'] == 'control'].set_index('Especie')
+# Unir todo
+merged = wt[['media']].join(
+    control[['media']],
+    lsuffix='_wt', rsuffix='_control'
+).join(
+    medidas_especie.set_index('Especie')
+)
+# Calcular tamaño del efecto estandarizado con SD global
+merged['tamaño_efecto'] = (merged['media_control'] - merged['media_wt']) / merged['desviacion_tipica']
+t_efecto_Msativa = merged.loc['Msativa', 'tamaño_efecto']
+t_efecto_Mtruncatula = merged.loc['Mtruncatula', 'tamaño_efecto']
+print(f"Tamaño de efecto Msativa: {t_efecto_Msativa:.3f}")
+print(f"Tamaño de efecto Mtruncatula: {t_efecto_Mtruncatula:.3f}")
+print(merged[['media_control', 'media_wt', 'desviacion_tipica', 'tamaño_efecto']].round(3))
+analisis = TTestIndPower()
+# Calcular n para Msativa
+n_Msativa = int(analisis.solve_power(
+    effect_size=t_efecto_Msativa,
+    alpha=0.05,
+    power=0.8,
+    alternative='two-sided'
+))
+print(f"Tamaño de muestra por grupo para Msativa: {n_Msativa:.1f}") # Resultado 5
+# Calcular n para Mtruncatula
+n_Mtruncatula = int(analisis.solve_power(
+    effect_size=t_efecto_Mtruncatula,
+    alpha=0.05,
+    power=0.8,
+    alternative='two-sided'
+))
+print(f"Tamaño de muestra por grupo para Mtruncatula: {n_Mtruncatula:.1f}") # Resultado 4
 ```
+Los resultados obtenidos fueron: n = 5 para M. sativa y n = 4 para M. truncatula. Sin embargo, en general el control sin inocular se realiza para controlar que no haya contaminaciones en el experimento. En general, lo que se busca evaluar (al menos en este experimento) es si existen diferencias en la inoculación/tratamiento con diferentes tipos de bacterias/cepas. Por esta razón, recalculé de forma análoga los tamaños de la muestra pero ahora comparando el tamaño del efecto para la comparación wt vs actK1 y wt vs actK2.
+
+wt vs actK2 --> En este caso se observa que dado que las medias son prácticamente iguales en M. sativa, el tamaño de la muestra debería ser infinitamente grande para detectar diferencias entre wt y actK2.
+```python
+             media_actK2-  media_wt  desviacion_tipica  tamaño_efecto
+Especie
+Msativa            52.876    52.935             24.093         -0.002
+Mtruncatula        48.943    75.708             26.219         -1.021
+Tamaño de muestra por grupo para Msativa wt vs actK2-: 2539107.0
+Tamaño de muestra por grupo para Mtruncatula wt vs actK2-: 16.0
+```
+wt vs actK1 --> En este otro caso, para este mutante las medias son diferentes y el tamaño de la muestra debería ser cercano a 583 para detectar diferencias entre wt y actK1 en M. sativa, mientras que con 56 plantas bastaría para determinar diferencias entre wt y actK1 en M. truncatula.
+```python
+             media_actK1-  media_wt  desviacion_tipica  tamaño_efecto
+Especie
+Msativa            56.891    52.935             24.093          0.164
+Mtruncatula        61.826    75.708             26.219         -0.529
+Tamaño de muestra por grupo para Msativa wt vs actK1-: 583.0
+Tamaño de muestra por grupo para Mtruncatula wt vs actK1-: 56.0
+```
+
+
+
+  
