@@ -343,6 +343,8 @@ Mtruncatula      53      46       52  48
 
 Esto significa que no hay evidencia estadística de que la frecuencia de tratamientos dependa de la especie. En otras palabras, la distribución de cepas es similar entre M. sativa y M. truncatula (en términos de cantidad de muestras por tratamiento).
 
+### 10 - Análisis de correlación
 
+Para llevar a cabo este análisis debería contar con otra variable aleatoria continua que haya sido evaluada en el experimento. Si bien en este caso no cuento con esos datos, sería interesante evaluar la cantidad de nódulos por planta y realizar un test de correlación para evaluar si la cantidad de nódulos correlaciona con mayor fijación biológica de nitrógeno.
 
   
