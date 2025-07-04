@@ -34,6 +34,12 @@ Para observar cómo se distribuyen los datos de peso seco obtenidos para la inoc
 ![Figure_1-histograma-curva-por-especie](https://github.com/user-attachments/assets/024afd83-1240-4a18-922c-31f0c87a4a6a) 
 ### Figura 1
 
+Por otro lado, también grafiqué como se distribuyen las frecuencias de cada Especie-Tratamiento:
+
+![Figure_2-frecuencias-individuales](https://github.com/user-attachments/assets/5ef0a894-4dee-4950-8433-2b7ddadaed0e)
+### Figura 2
+En este caso, es posible visualizar cada set de datos Especie-Tratamiento, dado que al visualizar todas las frecuencias de peso seco para cada especie de planta, puede enmascararse otro tipo de distribución.
+
 Además, calculé medidas resumen: de centralización (media, mediana, moda y percentiles) y de dispersión (varianza y desviación) para analizar los resultados por especie y tratamiento. 
 Los resultados se muestran en la siguiente tabla:
 
@@ -97,7 +103,7 @@ A diferencia, los datos de peso seco de M. truncatula presentan asimetría posit
 
 ### 6 - Estimación de intervalos de confianza
 
-Se calcularon los intervalos sobre los cuales que podamos establecer (con cierta probabilidad) que el parámetro poblacional se encuentra contenido mediante intervalos de confianza. Para ello, teniendo en cuenta que todos los tratamientos contenian más de 30 datos, se asumió distribución normal.
+Se calcularon los intervalos sobre los cuales podamos establecer (con cierta probabilidad) que el parámetro poblacional se encuentra contenido mediante intervalos de confianza. Para ello, teniendo en cuenta que todos los tratamientos contenian más de 30 datos, se asumió distribución normal.
 
 ```python
 Código:
@@ -131,7 +137,7 @@ Intervalos de confianza por especie y tratamiento:
 ### 7 - Estimación del tamaño muestral
 
 Aunque en este caso se conoce el n de cada tratamiento, al diseñar un experimento muchas veces es necesario tenerlo en cuenta previamente.
-Para calcular el tamaño de la muestra se necesita:
+Para calcular el tamaño de la muestra se necesitan los siguientes parámetro:
 - Nivel α (nivel alfa) (generalmente = 0.05)
 - Potencia (normalmente 0,8)
 - Tamaño del efecto (diferencia entre dos medias dividida por una desviación estándar)
@@ -178,9 +184,9 @@ n_Mtruncatula = int(analisis.solve_power(
 ))
 print(f"Tamaño de muestra por grupo para Mtruncatula: {n_Mtruncatula:.1f}") # Resultado 4
 ```
-Los resultados obtenidos fueron: n = 5 para M. sativa y n = 4 para M. truncatula. Sin embargo, en general el control sin inocular se realiza para controlar que no haya contaminaciones en el experimento. En general, lo que se busca evaluar (al menos en este experimento) es si existen diferencias en la inoculación/tratamiento con diferentes tipos de bacterias/cepas. Por esta razón, recalculé de forma análoga los tamaños de la muestra pero ahora comparando el tamaño del efecto para la comparación wt vs actK1 y wt vs actK2.
+Los resultados obtenidos fueron: n = 5 para M. sativa y n = 4 para M. truncatula. Sin embargo, en general, el control sin inocular se realiza para controlar que no haya contaminaciones en el experimento. Comunmente, lo que se busca evaluar (al menos en este experimento) es si existen diferencias en la inoculación/tratamiento con diferentes tipos de bacterias/cepas. Por esta razón, recalculé de forma análoga los tamaños de la muestra pero ahora comparando el tamaño del efecto para la comparación wt vs actK1 y wt vs actK2.
 
-wt vs actK2 --> En este caso se observa que dado que las medias son prácticamente iguales en M. sativa, el tamaño de la muestra debería ser infinitamente grande para detectar diferencias entre wt y actK2.
+wt vs actK2 --> En este caso, como es de esperarse, se observa que dado que las medias son prácticamente iguales en M. sativa, el tamaño de la muestra debería ser infinitamente grande para detectar diferencias entre wt y actK2.
 ```python
 '''
              media_actK2-  media_wt  desviacion_tipica  tamaño_efecto
@@ -210,10 +216,65 @@ Si bien en la Figura 1 se puede observar que los datos tanto para M. sativa como
 H0: los datos se distribuyen normalmente.
 H1: los datos no se distribuyen normalmente.
 ```python
+peso_seco = df['peso-seco-mg'].dropna() # Guardo datos globales de peso seco en una variable
 print("El resultado del test de normalidad es: ", stats.normaltest(peso_seco, axis=0, nan_policy='propagate'))
 ```
 El resultado del test de normalidad es:  NormaltestResult(statistic=np.float64(2.517611463908273), pvalue=np.float64(0.2839929878047395))
-De este modo, no hay evidencia para afirmar que los datos se desvían de la normalidad y no es posible rechazar H0.
+De este modo, no hay evidencia para afirmar que los datos globales, sin distinguir especie y tratamiento, se desvían de la normalidad y no es posible rechazar H0.
+
+**Test de normalidad distinguiendo especie**
+```python
+=== Normalidad: Msativa ===
+Estadístico = 31.988, p-valor = 0.0000
+No se puede asumir normalidad (Msativa)
+
+=== Normalidad: Mtruncatula ===
+Estadístico = 5.733, p-valor = 0.0569
+Se puede asumir normalidad (Mtruncatula)
+```
+Al realizar el test con los datos globales de peso seco, estos cumplen el test de normalidad. Es decir, no es posible rechazar H0. 
+Sin embargo, al distinguir por especie se encuentra que para M. sativa no se puede asumir normalidad mientras que para M. truncatula sí.
+
+**Test de normalidad para Especie-Tratamiento**
+```python
+Normalidad para Mtruncatula - wt:
+  Estadístico = 16.705, p-valor = 0.0002
+No se puede asumir normalidad
+
+Normalidad para Mtruncatula - actK1-:
+  Estadístico = 3.413, p-valor = 0.1815
+Se puede asumir normalidad
+
+Normalidad para Mtruncatula - actK2-:
+  Estadístico = 1.730, p-valor = 0.4210
+Se puede asumir normalidad
+
+Normalidad para Mtruncatula - control:
+  Estadístico = 3.221, p-valor = 0.1997
+Se puede asumir normalidad
+
+Normalidad para Msativa - wt:
+  Estadístico = 4.118, p-valor = 0.1276
+Se puede asumir normalidad
+
+Normalidad para Msativa - actK1-:
+  Estadístico = 1.740, p-valor = 0.4189
+Se puede asumir normalidad
+
+Normalidad para Msativa - actK2-:
+  Estadístico = 0.140, p-valor = 0.9324
+Se puede asumir normalidad
+
+Normalidad para Msativa - control:
+  Estadístico = 3.768, p-valor = 0.1520
+Se puede asumir normalidad
+```
+Realizando el test para cada set de datos Especie-Tratamiento (La Figura 2 muestra los histogramas de frecuencia por separado), se encuentra que solo en un caso la distribución de datos no se puede asumir normal: M. truncatula - wt.
+
+**Conclusiones:**
+- A nivel global, la distribución del peso seco puede considerarse normal.
+- Al separar por especie, existen diferencias: M. sativa no cumple normalidad, M. truncatula sí.
+- Analizando Especie-Tratamiento, casi todos los set de datos cumplen normalidad, excepto M. truncatula - wt.
 
 Test de Levene para comparar varianzas entre tratamientos dentro de cada especie de planta:
 
