@@ -213,8 +213,11 @@ Tamaño de muestra por grupo para Mtruncatula wt vs actK1-: 56.0
 Si bien en la Figura 1 se puede observar que los datos tanto para M. sativa como para M. truncatula no parecen seguir una distribución normal, realizo un test para verificarlo. Propuse realizarlo para los datos globales, los datos por especie y por especie-tratamiento.
 
 **Test de normalidad:**
-H0: los datos se distribuyen normalmente.
-H1: los datos no se distribuyen normalmente.
+
+- H0: los datos se distribuyen normalmente.
+
+- H1: los datos no se distribuyen normalmente.
+
 ```python
 peso_seco = df['peso-seco-mg'].dropna()
 stat_global, p_global = stats.normaltest(peso_seco, axis=0, nan_policy='propagate')
@@ -288,6 +291,10 @@ Realizando el test para cada set de datos Especie-Tratamiento (La Figura 2 muest
 
 **Realizo el test de Levene para comparar varianzas entre tratamientos dentro de cada especie**
 
+- H0: la homocedasticidad de varianzas en el peso seco de las muestras se debe al azar.
+
+- H1: la homocedasticidad de varianzas en el peso seco de las muestras no se debe al azar.
+
 ```python
 Código:
 for especie in df['Especie'].unique():
@@ -321,8 +328,10 @@ for especie in df['Especie'].unique():
 **Prueba Welch**
 Teniendo en cuenta que los datos para M. truncatula cumplen el test de normalidad pero cuentan con varianzas desiguales, realizo la Prueba de Welch para comparar entre dos tratamientos dentro de esta especie de plantas. Es una versión modificada de la prueba t de Student que se utiliza cuando los datos tienen varianzas desiguales o diferentes tamaños de muestra.
 
-H0: Los tratamientos no difieren significativamente.
-H1: Los tratamientos presentan presentan diferencias significativas.
+
+- H0: Los tratamientos no difieren significativamente.
+
+- H1: Los tratamientos presentan presentan diferencias significativas.
 
 ```python
 Código:
@@ -367,8 +376,9 @@ Al realizar el test de Welch entre pares de tratamientos, se observa que los tra
 Por otro lado, dado que los datos para M. sativa no cumplen el supuesto de normalidad realizo en este caso un test no paramétrico: Test de Kruskal-Wallis.
 Es una prueba no paramétrica que se utiliza para comparar la mediana de tres o más grupos independientes cuando los datos no siguen una distribución normal.
 
-H0: Los tratamientos no presentan presentan diferencias significativas entre sí.
-H1: Los tratamientos presentan presentan diferencias significativas entre sí.
+- H0: Los tratamientos no presentan presentan diferencias significativas entre sí.
+
+- H1: Los tratamientos presentan presentan diferencias significativas entre sí.
 
 ```python
 Código:
@@ -398,8 +408,10 @@ Como puede observarse en los resultados, no hay diferencias significativas entre
 Prueba de chi-cuadrado: Es una prueba estadística que se utiliza para evaluar la asociación entre dos variables categóricas. La prueba de chi-cuadrado compara la frecuencia observada en cada celda de la tabla de contingencia con la frecuencia esperada si no hubiera ninguna relación entre las variables. Si la diferencia entre la frecuencia observada y la esperada es grande, se concluye que hay una relación significativa entre las variables.
 
 El test de Chi2 evalúa si hay dependencia entre las dos variables categóricas:
-H0: Especie y Tratamiento son variables independientes.
-H1: Existe una relación entre las variables Especie y Tratamiento.
+
+- H0: Especie y Tratamiento son variables independientes.
+
+- H1: Existe una relación entre las variables Especie y Tratamiento.
 
 ```python
 Código:
