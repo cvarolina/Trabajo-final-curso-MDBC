@@ -291,9 +291,9 @@ Realizando el test para cada set de datos Especie-Tratamiento (La Figura 2 muest
 
 **Realizo el test de Levene para comparar varianzas entre tratamientos dentro de cada especie**
 
-- H0: la homocedasticidad de varianzas en el peso seco de las muestras se debe al azar.
+- H0: la homocedasticidad de varianzas se debe al azar.
 
-- H1: la homocedasticidad de varianzas en el peso seco de las muestras no se debe al azar.
+- H1: la homocedasticidad de varianzas no se debe al azar.
 
 ```python
 Código:
@@ -324,6 +324,7 @@ for especie in df['Especie'].unique():
 # p-valor: 0.0000
 # No se cumple la igualdad de varianzas (varianzas desiguales).
 ```
+Al aplicar el test de Levene, obteniendo un valor de p<0.05 en ambos casos es posible rechazar H0, la homocedasticidad de varianzas no se debe al azar.
 
 **Prueba Welch**
 Teniendo en cuenta que los datos para M. truncatula cumplen el test de normalidad pero cuentan con varianzas desiguales, realizo la Prueba de Welch para comparar entre dos tratamientos dentro de esta especie de plantas. Es una versión modificada de la prueba t de Student que se utiliza cuando los datos tienen varianzas desiguales o diferentes tamaños de muestra.
