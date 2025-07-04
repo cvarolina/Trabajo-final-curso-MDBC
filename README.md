@@ -442,4 +442,6 @@ Esto significa que no hay evidencia estadística de que la frecuencia de tratami
 
 Para llevar a cabo este análisis debería contar con otra variable aleatoria continua que haya sido evaluada en el experimento. Si bien en este caso no cuento con esos datos, sería interesante evaluar la cantidad de nódulos por planta y realizar un test de correlación para evaluar si la cantidad de nódulos correlaciona con mayor fijación biológica de nitrógeno. Esta evaluación resulta interesante porque más nódulos no implica necesariamente mayor FBN. De hecho, se han reportado casos de cepas que generan muchos nódulos en las raíces de M. truncatula o M. sativa pero que los mismos son ineficientes en la FBN.
 
-  
+### 11 - Conclusiones generales y perspectivas
+
+A modo de resumen, este trabajo final permitió analizar los datos obtenidos de ensayos en plantas sometidas a distintos tratamientos. El objetivo principal fue evaluar si existían diferencias significativas entre la cepa salvaje y diferentes mutantes en la FBN. Los resultados mostraron que, al inocular plantas de M. truncatula con distintas cepas, se observaron diferencias significativas en el peso seco en comparación con la cepa salvaje (wt). En cambio, en plantas de M. sativa, no se detectaron diferencias significativas en la FBN entre los tratamientos con cepas bacterianas. Este resultado, sumado a evidencia previamente reportada, resalta el rol de la especie vegetal en la interacción rizobio-leguminosa.
