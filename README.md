@@ -138,7 +138,7 @@ Intervalos de confianza por especie y tratamiento:
 
 Aunque en este caso se conoce el n de cada tratamiento, al diseñar un experimento muchas veces es necesario tenerlo en cuenta previamente.
 Para calcular el tamaño de la muestra se necesitan los siguientes parámetro:
-- Nivel α (nivel alfa) (generalmente = 0.05)
+- Nivel alfa (generalmente = 0.05)
 - Potencia (normalmente 0,8)
 - Tamaño del efecto (diferencia entre dos medias dividida por una desviación estándar)
 
@@ -210,16 +210,26 @@ Tamaño de muestra por grupo para Mtruncatula wt vs actK1-: 56.0
 ```
 
 ### 8 - Contraste de hipótesis
-Si bien en la Figura 1 se puede observar que los datos tanto para M. sativa como para M. truncatula no parecen seguir una distribución normal, realizo un test para verificarlo.
+Si bien en la Figura 1 se puede observar que los datos tanto para M. sativa como para M. truncatula no parecen seguir una distribución normal, realizo un test para verificarlo. Propuse realizarlo para los datos globales, los datos por especie y por especie-tratamiento.
 
 **Test de normalidad:**
 H0: los datos se distribuyen normalmente.
 H1: los datos no se distribuyen normalmente.
 ```python
-peso_seco = df['peso-seco-mg'].dropna() # Guardo datos globales de peso seco en una variable
-print("El resultado del test de normalidad es: ", stats.normaltest(peso_seco, axis=0, nan_policy='propagate'))
+peso_seco = df['peso-seco-mg'].dropna()
+stat_global, p_global = stats.normaltest(peso_seco, axis=0, nan_policy='propagate')
+print("=== Normalidad: Global ===")
+print(f"Estadístico = {stat_global:.3f}, p-valor = {p_global:.4f}")
+if p_global < 0.05:
+    print("No se puede asumir normalidad\n")
+else:
+    print("Se puede asumir normalidad\n")
+
+Resultado:
+=== Normalidad: Global ===
+Estadístico = 2.518, p-valor = 0.2840
+Se puede asumir normalidad
 ```
-El resultado del test de normalidad es:  NormaltestResult(statistic=np.float64(2.517611463908273), pvalue=np.float64(0.2839929878047395))
 De este modo, no hay evidencia para afirmar que los datos globales, sin distinguir especie y tratamiento, se desvían de la normalidad y no es posible rechazar H0.
 
 **Test de normalidad distinguiendo especie**
@@ -275,8 +285,6 @@ Realizando el test para cada set de datos Especie-Tratamiento (La Figura 2 muest
 - A nivel global, la distribución del peso seco puede considerarse normal.
 - Al separar por especie, existen diferencias: M. sativa no cumple normalidad, M. truncatula sí.
 - Analizando Especie-Tratamiento, casi todos los set de datos cumplen normalidad, excepto M. truncatula - wt.
-
-Test de Levene para comparar varianzas entre tratamientos dentro de cada especie de planta:
 
 **Realizo el test de Levene para comparar varianzas entre tratamientos dentro de cada especie**
 
