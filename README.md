@@ -137,7 +137,7 @@ Intervalos de confianza por especie y tratamiento:
 ### 7 - Estimación del tamaño muestral
 
 Aunque en este caso se conoce el n de cada tratamiento, al diseñar un experimento muchas veces es necesario tenerlo en cuenta previamente.
-Para calcular el tamaño de la muestra se necesitan los siguientes parámetro:
+Para calcular el tamaño de la muestra se necesitan los siguientes parámetros:
 - Nivel alfa (generalmente = 0.05)
 - Potencia (normalmente 0,8)
 - Tamaño del efecto (diferencia entre dos medias dividida por una desviación estándar)
