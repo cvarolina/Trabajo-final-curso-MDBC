@@ -311,19 +311,22 @@ for especie in df['Especie'].unique():
 ```
 
 **Prueba Welch**
-Teniendo en cuenta que los datos cumplen el test de normalidad pero cuentan con varianzas desiguales, realizo la Prueba de Welch para comparar entre dos tratamientos dentro de una especie de plantas. Es una versión modificada de la prueba t de Student que se utiliza cuando los datos tienen varianzas desiguales o diferentes tamaños de muestra.
+Teniendo en cuenta que los datos para M. truncatula cumplen el test de normalidad pero cuentan con varianzas desiguales, realizo la Prueba de Welch para comparar entre dos tratamientos dentro de esta especie de plantas. Es una versión modificada de la prueba t de Student que se utiliza cuando los datos tienen varianzas desiguales o diferentes tamaños de muestra.
+
+H0: Los tratamientos no difieren significativamente.
+H1: Los tratamientos presentan presentan diferencias significativas.
 
 ```python
 Código:
-### Test de Welch
+### Test de Welch - Modificación de t-test con varianzas desiguales
 # Pares de comparación
 comparaciones = [
     ('wt', 'actK1-'),
     ('wt', 'actK2-'),
     ('actK1-', 'actK2-')
 ]
-# Especies a analizar
-especies = ['Msativa', 'Mtruncatula']
+# Especies a analizar: lo hago solo para M.truncatula porque los datos son normales pero con varianzas desiguales
+especies = ['Mtruncatula']
 # Recorrer especies y pares
 for especie in especies:
     subset = df[df['Especie'] == especie]
@@ -334,30 +337,53 @@ for especie in especies:
         stat, p = ttest_ind(grupo1, grupo2, equal_var=False)
         print(f"{t1} vs {t2}: t = {stat:.3f}, p = {p:.4f}")
         if p < 0.05:
-            print(f"→ Diferencia significativa ({t1} vs {t2})")
+            print(f"Diferencia significativa ({t1} vs {t2})")
         else:
-            print(f"→ No hay diferencia significativa ({t1} vs {t2})")
+            print(f"No hay diferencia significativa ({t1} vs {t2})")
+
 
 # Resultados:
-# === Welch t-tests para Msativa ===
-# wt vs actK1-: t = -1.177, p = 0.2423
-# → No hay diferencia significativa (wt vs actK1-)
-# wt vs actK2-: t = 0.019, p = 0.9853
-# → No hay diferencia significativa (wt vs actK2-)
-# actK1- vs actK2-: t = 1.329, p = 0.1872
-# → No hay diferencia significativa (actK1- vs actK2-)
-
-# === Welch t-tests para Mtruncatula ===
-# wt vs actK1-: t = 3.577, p = 0.0005
-# → Diferencia significativa (wt vs actK1-)
-# wt vs actK2-: t = 7.487, p = 0.0000
-# → Diferencia significativa (wt vs actK2-)
-# actK1- vs actK2-: t = 3.964, p = 0.0001
-# → Diferencia significativa (actK1- vs actK2-)
+=== Welch t-tests para Mtruncatula ===
+wt vs actK1-: t = 3.577, p = 0.0005
+Diferencia significativa (wt vs actK1-)
+wt vs actK2-: t = 7.487, p = 0.0000
+Diferencia significativa (wt vs actK2-)
+actK1- vs actK2-: t = 3.964, p = 0.0001
+Diferencia significativa (actK1- vs actK2-)
 
 ```
 
-Al realizar el test de Welch entre pares de tratamientos, se observa que los tratamientos en M. sativa no mostraron diferencias significativas entre sí. Sin embargo, en M. truncatula los tratamientos sí difieren significativamente. 
+Al realizar el test de Welch entre pares de tratamientos, se observa que los tratamientos en M. truncatula difieren significativamente y es posible rechazar H0 en todos los casos.
+
+**Test de Kruskal-Wallis**
+Por otro lado, dado que los datos para M. sativa no cumplen el supuesto de normalidad realizo en este caso un test no paramétrico: Test de Kruskal-Wallis.
+Es una prueba no paramétrica que se utiliza para comparar la mediana de tres o más grupos independientes cuando los datos no siguen una distribución normal.
+
+H0: Los tratamientos no presentan presentan diferencias significativas entre sí.
+H1: Los tratamientos presentan presentan diferencias significativas entre sí.
+
+```python
+Código:
+# Test de Kruskal-Wallis para M.sativa (comparación múltiple simultánea) - Test no paramétrico
+print("\n=== Test de Kruskal-Wallis para Msativa ===")
+df_msativa = df[df['Especie'] == 'Msativa']
+# Extraer datos para los 3 tratamientos
+grupo_wt = df_msativa[df_msativa['Tratamiento'] == 'wt']['peso-seco-mg'].dropna()
+grupo_actK1 = df_msativa[df_msativa['Tratamiento'] == 'actK1-']['peso-seco-mg'].dropna()
+grupo_actK2 = df_msativa[df_msativa['Tratamiento'] == 'actK2-']['peso-seco-mg'].dropna()
+stat, p = kruskal(grupo_wt, grupo_actK1, grupo_actK2)
+print(f"Kruskal-Wallis H = {stat:.3f}, p = {p:.4f}")
+if p < 0.05:
+    print("Hay diferencias significativas entre al menos dos grupos en Msativa")
+else:
+    print("No hay diferencias significativas entre los grupos en Msativa")
+
+# Resultado:
+=== Test de Kruskal-Wallis para Msativa ===
+Kruskal-Wallis H = 2.774, p = 0.2498
+No hay diferencias significativas entre los grupos en Msativa
+```
+Como puede observarse en los resultados, no hay diferencias significativas entre los tratamientos en M. sativa y no es posible rechazar H0.
 
 ### 9 - Comparación entre variables categóricas
 
@@ -406,6 +432,6 @@ Esto significa que no hay evidencia estadística de que la frecuencia de tratami
 
 ### 10 - Análisis de correlación
 
-Para llevar a cabo este análisis debería contar con otra variable aleatoria continua que haya sido evaluada en el experimento. Si bien en este caso no cuento con esos datos, sería interesante evaluar la cantidad de nódulos por planta y realizar un test de correlación para evaluar si la cantidad de nódulos correlaciona con mayor fijación biológica de nitrógeno.
+Para llevar a cabo este análisis debería contar con otra variable aleatoria continua que haya sido evaluada en el experimento. Si bien en este caso no cuento con esos datos, sería interesante evaluar la cantidad de nódulos por planta y realizar un test de correlación para evaluar si la cantidad de nódulos correlaciona con mayor fijación biológica de nitrógeno. Esta evaluación resulta interesante porque más nódulos no implica necesariamente mayor FBN. De hecho, se han reportado casos de cepas que generan muchos nódulos en las raíces de M. truncatula o M. sativa pero que los mismos son ineficientes en la FBN.
 
   
